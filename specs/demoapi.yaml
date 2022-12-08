@@ -1,0 +1,154 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: MySpec
+  description: Trying to use sauce extension
+servers:
+  - url: http://demoapi.apifortress.com/api
+  - url: http://utils.apifortress.com/api
+  - url: http://localhost:5001/api
+
+paths:
+  '/retail/product':
+    get:
+      operationId: listProducts
+      description: lists all products
+      parameters:
+        - name: key
+          in: header
+          schema:
+            type: string
+          example: 'ABC123'
+      responses:
+        '200':
+          x-sauce-cond:
+            op: equals
+            collection: headers
+            key: key
+            value: ABC123
+            priority: 10
+          description: the list of the products
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  '$ref': '#/components/schemas/product'
+              example: |
+                [
+                  {
+                      "category": "1",
+                      "color": [
+                          "blue",
+                          "yellow"
+                      ],
+                      "createdAt": "2021-05-04T05:56:50.978Z",
+                      "description": "This is product 1!",
+                      "id": 1,
+                      "imageURL": "http://image.com",
+                      "name": "Baseball Cap",
+                      "price": 29.99,
+                      "quantity": 5,
+                      "updatedAt": "2021-05-04T05:56:50.978Z"
+                  }
+                ]
+        '401':
+          description: not authorized
+          content:
+            'application/json':
+              schema:
+                '$ref': '#/components/schemas/unauthorized'
+
+  '/retail/product/{id}':
+    get:
+      operationId: productDetails
+      description: lists all products
+      parameters:
+        - name: key
+          in: header
+          schema:
+            type: string
+          example: 'ABC123'
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: number
+          example: 1
+      responses:
+        '200':
+          x-sauce-cond:
+            op: equals
+            collection: headers
+            key: key
+            value: ABC123
+            priority: 10
+          description: product details
+          content:
+            'application/json':
+              schema:
+                '$ref': '#/components/schemas/product'
+              example: |
+                  {
+                      "category": "1",
+                      "color": [
+                          "blue",
+                          "yellow"
+                      ],
+                      "createdAt": "2021-05-04T05:56:50.978Z",
+                      "description": "This is product 1!",
+                      "id": 1,
+                      "imageURL": "http://image.com",
+                      "name": "Baseball Cap",
+                      "price": 29.99,
+                      "quantity": 5,
+                      "updatedAt": "2021-05-04T05:56:50.978Z"
+                  }
+        '401':
+          description: not authorized
+          content:
+            'application/json':
+              schema:
+                '$ref': '#/components/schemas/unauthorized'
+              example: |
+                {
+                    "Message": "Unauthorized Token",
+                    "Status": 401
+                }
+components:
+  schemas:
+    product:
+      type: object
+      properties:
+        category:
+          type: string
+        color:
+          type: array
+          items:
+            type: string
+        createdAt:
+          type: string
+        description:
+          type: string
+        imageURL:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+        updatedAt:
+          type: string
+    unauthorized:
+      type: object
+      properties:
+        Message:
+          type: string
+        Status:
+          type: integer
+      example: |
+        {
+            "Message": "Unauthorized Token",
+            "Status": 401
+        }

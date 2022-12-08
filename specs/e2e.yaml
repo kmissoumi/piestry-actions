@@ -1,0 +1,33 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Spec Seed
+  description: Trying to use sauce extension
+servers:
+  - url: http://demoapi.apifortress.com
+
+
+
+paths:
+  /release-notes:
+    get:
+      operationId: getReleaseNotes
+      parameters:
+        - name: version
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: returns release notes
+          headers:
+            version:
+              schema:
+                type: integer
+              required: true
+              example:
+                12
+
+  /api/retail/product:
+    get:
