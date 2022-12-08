@@ -1,6 +1,13 @@
 name: piestry-logger
 on: workflow_dispatch
 
+
+env:
+  SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
+  SAUCE_USERNAME: grogu
+  SAUCE_DC: eu-central-1
+  SAUCE_APIT_HOOK_ID: 57423d15-8bba-49bb-9ef9-dc7b68eb0848
+
 jobs:
     validate:
       runs-on: ubuntu-latest
@@ -9,10 +16,5 @@ jobs:
       - name: Start Piestry
         run: |
           docker run --detach --pull always --publish 6000:5000 --volume ${{ github.workspace }}/specs:/specs quay.io/saucelabs/piestry:latest --logger https://${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}@api.${SAUCE_DC}.saucelabs.com/api-testing/rest/v4/${SAUCE_APIT_HOOK_ID}/logger -u /specs/myspec.yaml
-        env:
-          SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
-          SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
-          SAUCE_DC: ${{ SAUCE_DC }}
-          SAUCE_APIT_HOOK_ID: ${{ SAUCE_APIT_HOOK_ID }}
       - name: Check Logger
         run: "curl --user foobar:password --verbose http://localhost:6000/api/v1/user"
