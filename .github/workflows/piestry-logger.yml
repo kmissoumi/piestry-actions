@@ -8,13 +8,13 @@ env:
   SAUCE_APIT_HOOK_ID: 57423d15-8bba-49bb-9ef9-dc7b68eb0848
 
 jobs:
-    validate:
-      runs-on: ubuntu-latest
-      - steps:
-        - uses: actions/checkout@v3
-        - name: Add Spec to Piestry
-        run: |
-          docker run --detach --pull always --publish 6000:5000 --volume ${{ github.workspace }}/specs:/specs quay.io/saucelabs/piestry:latest --logger https://${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}@api.${SAUCE_DC}.saucelabs.com/api-testing/rest/v4/${SAUCE_APIT_HOOK_ID}/logger -u /specs/myspec.yaml
-          sleep 10
-      - name: Check Logger
-        run: "curl --user foobar:password --verbose http://localhost:6000/api/v1/user"
+  validate:
+    runs-on: ubuntu-latest
+    - steps:
+      - uses: actions/checkout@v3
+      - name: Add Spec to Piestry
+      run: |
+        docker run --detach --pull always --publish 6000:5000 --volume ${{ github.workspace }}/specs:/specs quay.io/saucelabs/piestry:latest --logger https://${SAUCE_USERNAME}:${SAUCE_ACCESS_KEY}@api.${SAUCE_DC}.saucelabs.com/api-testing/rest/v4/${SAUCE_APIT_HOOK_ID}/logger -u /specs/myspec.yaml
+        sleep 10
+    - name: Check Logger
+      run: "curl --user foobar:password --verbose http://localhost:6000/api/v1/user"
